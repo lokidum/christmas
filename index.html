@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ammu's Magical Christmas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@11/dist/framer-motion.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Pacifico&family=Comfortaa:wght@300;400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&family=Ballet&family=Faustina:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Countdown -->
+    <div id="countdown" class="countdown">
+        <canvas id="starsCanvas" class="absolute inset-0 pointer-events-none"></canvas>
+        <canvas id="fireworksCanvas" class="absolute inset-0 pointer-events-none"></canvas>
+        <div id="countdownNumber" class="countdown-number">5</div>
+        <div id="christmasTree" class="christmas-tree hidden">
+            <div class="tree-text">🎄</div>
+        </div>
+    </div>
+
+    <!-- Entry Page -->
+    <div id="entryPage" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <!-- Background Image -->
+        <img src="background.png" alt="North Pole Background" class="absolute inset-0 w-full h-full object-cover z-0">
+        <!-- White Overlay for Softening -->
+        <div class="absolute inset-0 bg-white opacity-70 z-5"></div>
+        <!-- North Pole Background -->
+        <div id="northPoleBackground" class="absolute inset-0 z-10"></div>
+        <div id="snowflakesLanding" class="absolute inset-0 pointer-events-none z-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#a0d0e0] opacity-15 z-40"></div>
+        <div class="text-center z-50 px-4 relative">
+            <h1 class="text-7xl md:text-[10rem] text-[#16423C] mb-8 px-4 relative inline-block">
+                <span class="ballet-font relative z-10 drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">Merry Christmas Ammuuuu</span>
+                <span class="relative z-10 text-8xl md:text-[10rem] inline-block animate-pulse ml-2" style="filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.6));">❤️</span>
+            </h1>
+            <button id="enterButton" class="prettier-button text-white px-12 py-6 md:px-16 md:py-8 rounded-full text-2xl md:text-3xl font-bold shadow-2xl relative overflow-hidden opacity-75">
+                <span class="relative z-10 faustina-font">Let's make 2025 Christmas special</span>
+                <div class="button-shine"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Hub -->
+    <div id="mainHub" class="hidden min-h-screen py-8 px-4">
+        <!-- Music Box Toggle -->
+        <div class="fixed top-6 right-6 z-40">
+            <button id="musicToggle" class="glassmorphism rounded-full p-5 md:p-6 hover:bg-[#D4AF37] transition-all shadow-2xl hover:scale-110 group relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <svg class="w-8 h-8 md:w-10 md:h-10 text-[#16423C] relative z-10" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                </svg>
+            </button>
+            <!-- Note: Replace with your actual music file URL for the instrumental medley -->
+            <audio id="backgroundMusic" loop autoplay>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <!-- Photo Tree -->
+        <div id="photoTreeSection" class="flex flex-col items-center justify-center min-h-screen relative py-4 md:py-8">
+            <canvas id="glitterCanvas" class="absolute inset-0 pointer-events-none"></canvas>
+            <div class="pulse-star text-6xl md:text-9xl text-[#D4AF37] relative mb-2 md:mb-4 z-50" style="filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));">
+                ⭐
+            </div>
+            <div id="photoTree" class="relative z-10" style="min-height: 1px;">
+                <!-- Green Triangle Background -->
+                <div id="treeTriangle" class="absolute pointer-events-none" style="top: 0; left: 0; right: 0; bottom: 0; z-index: 1;"></div>
+                <div id="fairyLightsContainer" class="absolute pointer-events-none" style="top: 0; left: 0; right: 0; bottom: 0; z-index: 15;"></div>
+            </div>
+            <!-- Tree Trunk -->
+            <div id="treeTrunk" class="relative mt-2 z-10"></div>
+        </div>
+
+        <!-- Counter -->
+        <div id="counterSection" class="royal-counter-container mb-16 max-w-5xl mx-auto text-center relative opacity-0 transition-opacity duration-1000">
+            <h2 class="dancing-script text-5xl md:text-7xl text-[#16423C] mb-6 drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">Days Since Our Beginning</h2>
+            <div id="counter" class="royal-counter-display text-[#16423C] mb-4">
+                <span class="counter-item">
+                    <span class="counter-number" id="years">0</span>
+                    <span class="counter-label">Years</span>
+                </span>
+                <span class="counter-separator">•</span>
+                <span class="counter-item">
+                    <span class="counter-number" id="months">0</span>
+                    <span class="counter-label">Months</span>
+                </span>
+                <span class="counter-separator">•</span>
+                <span class="counter-item">
+                    <span class="counter-number" id="days">0</span>
+                    <span class="counter-label">Days</span>
+                </span>
+                <span class="counter-separator">•</span>
+                <span class="counter-item">
+                    <span class="counter-number" id="hours">00</span>
+                    <span class="counter-label">Hours</span>
+                </span>
+                <span class="counter-separator">•</span>
+                <span class="counter-item">
+                    <span class="counter-number" id="minutes">00</span>
+                    <span class="counter-label">Minutes</span>
+                </span>
+                <span class="counter-separator">•</span>
+                <span class="counter-item">
+                    <span class="counter-number" id="seconds">00</span>
+                    <span class="counter-label">Seconds</span>
+                </span>
+            </div>
+            <p class="mt-4 text-sm md:text-base text-[#16423C] opacity-70 font-light italic">Since December 8, 2023, 4:48 PM Melbourne</p>
+        </div>
+
+        <!-- Four Gifts Grid -->
+        <div id="giftsSection" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto mb-16 px-4 opacity-0 transition-opacity duration-1000">
+            <!-- Gift 1 -->
+            <div class="gift-card" data-gift="1">
+                <div class="glassmorphism rounded-3xl p-10 md:p-12 text-center h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff6b9d]/20 to-transparent rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="text-7xl md:text-8xl mb-6 animate-bounce" style="animation-duration: 2s;">🎁</div>
+                        <h3 class="dancing-script text-4xl md:text-5xl text-[#16423C] mb-3 drop-shadow-[0_2px_4px_rgba(22,66,60,0.2)]">The Heartfelt Letter</h3>
+                        <p class="text-[#16423C] opacity-80 font-medium text-lg">Open with love</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gift 2 -->
+            <div class="gift-card" data-gift="2">
+                <div class="glassmorphism rounded-3xl p-10 md:p-12 text-center h-full relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#D4AF37]/20 to-transparent rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="text-7xl md:text-8xl mb-6 animate-pulse">🎵</div>
+                        <h3 class="dancing-script text-4xl md:text-5xl text-[#16423C] mb-3 drop-shadow-[0_2px_4px_rgba(22,66,60,0.2)]">Our Christmas Soundtrack</h3>
+                        <p class="text-[#16423C] opacity-80 font-medium text-lg">Songs we love</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gift 3 -->
+            <div class="gift-card" data-gift="3">
+                <div class="glassmorphism rounded-3xl p-10 md:p-12 text-center h-full relative overflow-hidden">
+                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-[#16423C]/20 to-transparent rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="text-7xl md:text-8xl mb-6" style="animation: float 3s ease-in-out infinite;">💝</div>
+                        <h3 class="dancing-script text-4xl md:text-5xl text-[#16423C] mb-3 drop-shadow-[0_2px_4px_rgba(22,66,60,0.2)]">The Love Coupons</h3>
+                        <p class="text-[#16423C] opacity-80 font-medium text-lg">Special dates ahead</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gift 4 -->
+            <div class="gift-card" data-gift="4">
+                <div class="glassmorphism rounded-3xl p-10 md:p-12 text-center h-full relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-[#D4AF37]/30 to-transparent rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <div class="text-7xl md:text-8xl mb-6 sparkle">✨</div>
+                        <h3 class="dancing-script text-4xl md:text-5xl text-[#16423C] mb-3 drop-shadow-[0_2px_4px_rgba(22,66,60,0.2)]">The Final Surprise</h3>
+                        <p class="text-[#16423C] opacity-80 font-medium text-lg">Something special</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlays -->
+    <!-- Gift 1 Overlay -->
+    <div id="overlay1" class="overlay">
+        <div class="overlay-content max-w-2xl">
+            <button class="close-button">&times;</button>
+            <div id="rosePetalsOverlay" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div id="loveNotesOverlay" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div class="relative z-10">
+                <h2 class="dancing-script text-6xl md:text-7xl text-[#16423C] mb-8 text-center drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">To my dearest Ammu</h2>
+                <div class="text-[#16423C] space-y-6 text-lg md:text-xl leading-relaxed">
+                    <p class="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#16423C] via-[#D4AF37] to-[#16423C] bg-clip-text text-transparent">You are the greatest gift I've ever received.</p>
+                    <p class="text-center text-xl md:text-2xl opacity-90">Since December 2023, every second has been brighter because of you. Merry Christmas, my love.</p>
+                    <!-- Placeholder for image -->
+                    <div class="mt-6 mb-6 flex justify-center">
+                        <img id="letterImage" src="placeholder.jpg" alt="Our special moment" class="max-w-full h-auto rounded-2xl shadow-2xl border-4 border-[#D4AF37]" style="max-height: 400px; object-fit: cover; display: none;">
+                    </div>
+                    <div class="mt-10 p-8 md:p-10 glassmorphism rounded-2xl relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+                        <p class="dancing-script text-4xl md:text-5xl mb-6 text-center text-[#16423C]">A Poem for You</p>
+                        <div class="space-y-4">
+                            <p class="italic leading-relaxed text-xl md:text-2xl text-center font-light">
+                                From Melbourne's lights to the quiet nights,<br>
+                                Since December eighth, you've been my soul's delight.<br>
+                                4:48 PM, the moment time stood still,<br>
+                                Loving you, Ammu, is my favorite thrill.<br>
+                                Not just a girlfriend, but my home and my heart,<br>
+                                May 2025 be our most beautiful start.
+                            </p>
+                            <p class="mt-8 text-lg md:text-xl leading-relaxed">
+                                Your smile lights up my world in ways words can't capture. Your kindness touches everyone around you, and I'm the luckiest person to call you mine. Every day with you feels like Christmas morning—full of wonder, joy, and endless love.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift 2 Overlay -->
+    <div id="overlay2" class="overlay">
+        <div class="overlay-content max-w-2xl">
+            <button class="close-button">&times;</button>
+            <div id="candyCanes" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div class="relative z-10">
+                <h2 class="dancing-script text-6xl md:text-7xl text-[#16423C] mb-8 text-center drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">Our Christmas Soundtrack</h2>
+                <div class="flex flex-col items-center mb-10">
+                    <div id="recordPlayer" class="w-56 h-56 md:w-72 md:h-72 rounded-full bg-gradient-to-br from-[#16423C] via-[#1a5549] to-[#0a2e28] flex items-center justify-center mb-6 shadow-2xl relative" style="box-shadow: 0 20px 60px rgba(22, 66, 60, 0.5), inset 0 2px 10px rgba(0, 0, 0, 0.3);">
+                        <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#D4AF37] flex items-center justify-center relative overflow-hidden" style="background-size: 200% 200%; animation: shimmer 4s ease infinite;">
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_rgba(0,0,0,0.1)_100%)]"></div>
+                            <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#16423C] shadow-inner relative z-10"></div>
+                            <div class="absolute inset-0 border-4 border-[#16423C]/20 rounded-full"></div>
+                        </div>
+                    </div>
+                    <p class="text-base md:text-lg text-[#16423C] opacity-75 font-medium mb-6">Click a song to play</p>
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DWY05RKMQ0nno?si=6ec886f3ac5344f6" target="_blank" class="glassmorphism rounded-xl px-8 py-4 flex items-center gap-3 hover:bg-gradient-to-r hover:from-[#1DB954] hover:to-[#1ed760] transition-all shadow-lg hover:shadow-xl group">
+                        <svg class="w-8 h-8 text-[#1DB954] group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                        <span class="text-lg md:text-xl font-semibold text-[#16423C] group-hover:text-white transition-colors">Open on Spotify</span>
+                    </a>
+                </div>
+                <div id="songList" class="space-y-4 mt-8">
+                    <!-- Songs will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift 3 Overlay -->
+    <div id="overlay3" class="overlay">
+        <div class="overlay-content max-w-3xl">
+            <button class="close-button">&times;</button>
+            <div id="snowContainer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div class="relative z-10">
+                <h2 class="dancing-script text-6xl md:text-7xl text-[#16423C] mb-10 text-center drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">The Love Coupons</h2>
+                <div class="flex flex-col items-center gap-6 w-full">
+                    <!-- Coupon 1 -->
+                    <div class="flip-card h-64 md:h-72 w-full" data-coupon="1">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+                                <div class="text-6xl md:text-7xl mb-4 animate-bounce" style="animation-duration: 2s;">💆</div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-2">Spa Date</h3>
+                                <p class="text-xs md:text-sm text-[#16423C] opacity-75 mt-2 font-medium">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#F2E1C1] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_60%,_rgba(0,0,0,0.05)_100%)]"></div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-4 relative z-10">Spa Date</h3>
+                                <p class="text-[#16423C] text-center text-base md:text-lg font-medium relative z-10">Unlimited massages and relaxation.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coupon 2 -->
+                    <div class="flip-card h-64 md:h-72 w-full" data-coupon="2">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+                                <div class="text-6xl md:text-7xl mb-4 animate-pulse">🎨</div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-2">Clay Date</h3>
+                                <p class="text-xs md:text-sm text-[#16423C] opacity-75 mt-2 font-medium">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#F2E1C1] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_60%,_rgba(0,0,0,0.05)_100%)]"></div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-4 relative z-10">Clay Date</h3>
+                                <p class="text-[#16423C] text-center text-base md:text-lg font-medium relative z-10">Let's get messy and creative together.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coupon 3 -->
+                    <div class="flip-card h-64 md:h-72 w-full" data-coupon="3">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center cursor-pointer relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+                                <div class="text-6xl md:text-7xl mb-4 sparkle">👑</div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-2">The Yes Day!</h3>
+                                <p class="text-xs md:text-sm text-[#16423C] opacity-75 mt-2 font-medium">Click to reveal</p>
+                            </div>
+                            <div class="flip-card-back glassmorphism rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#F2E1C1] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_60%,_rgba(0,0,0,0.05)_100%)]"></div>
+                                <h3 class="dancing-script text-2xl md:text-3xl text-[#16423C] mb-4 relative z-10">The Yes Day!</h3>
+                                <p class="text-[#16423C] text-center text-base md:text-lg font-medium relative z-10">Ammu calls the shots for 24 hours straight!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift 4 Overlay -->
+    <div id="overlay4" class="overlay">
+        <div class="overlay-content max-w-2xl">
+            <button class="close-button">&times;</button>
+            <div id="goldenConfettiContainer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div id="goldenStarsContainer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div class="relative z-10 text-center">
+                <h2 class="dancing-script text-6xl md:text-7xl text-[#16423C] mb-10 drop-shadow-[0_4px_12px_rgba(22,66,60,0.3)]">The Final Surprise</h2>
+                <div class="mb-10">
+                    <div class="inline-block p-10 md:p-12 glassmorphism rounded-3xl bg-gradient-to-br from-[#D4AF37] via-[#F4D03F] to-[#F2E1C1] relative overflow-hidden shadow-2xl" style="box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_50%,_rgba(0,0,0,0.1)_100%)]"></div>
+                        <div class="relative z-10">
+                            <div class="text-9xl md:text-[12rem] mb-6 animate-bounce" style="animation-duration: 2s;">💳</div>
+                            <div class="text-5xl md:text-6xl font-bold text-[#16423C] mb-3 drop-shadow-[0_2px_8px_rgba(22,66,60,0.3)]">$150</div>
+                            <div class="text-2xl md:text-3xl text-[#16423C] opacity-90 font-semibold">Visa Gift Card</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-2xl md:text-3xl text-[#16423C] mb-10 font-medium leading-relaxed">
+                    For my favorite shopper!<br>
+                    <span class="dancing-script text-3xl md:text-4xl">Enjoy a little something for yourself, Ammu.</span>
+                </p>
+                <button class="glow-button text-[#16423C] px-10 py-5 md:px-12 md:py-6 rounded-full text-xl md:text-2xl font-bold shadow-2xl relative overflow-hidden">
+                    <span class="relative z-10">Claim Your $150 Surprise</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown and Music Start with Night Sky, Fireworks, and Tree Growth
+        const music = document.getElementById('backgroundMusic');
+        let countdownValue = 5;
+        const countdownEl = document.getElementById('countdown');
+        const countdownNumberEl = document.getElementById('countdownNumber');
+        const christmasTreeEl = document.getElementById('christmasTree');
+        const fireworksCanvas = document.getElementById('fireworksCanvas');
+        const starsCanvas = document.getElementById('starsCanvas');
+        
+        // Initialize night sky with stars and constellations
+        function initNightSky() {
+            starsCanvas.width = window.innerWidth;
+            starsCanvas.height = window.innerHeight;
+            const ctx = starsCanvas.getContext('2d');
+            
+            // Draw stars
+            const stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push({
+                    x: Math.random() * starsCanvas.width,
+                    y: Math.random() * starsCanvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+            
+            // Draw constellations (simple lines connecting some stars)
+            const constellations = [];
+            for (let i = 0; i < 8; i++) {
+                const constellation = [];
+                const startStar = stars[Math.floor(Math.random() * stars.length)];
+                constellation.push(startStar);
+                for (let j = 0; j < 3; j++) {
+                    const nearbyStar = stars.find(s => 
+                        Math.abs(s.x - constellation[constellation.length - 1].x) < 200 &&
+                        Math.abs(s.y - constellation[constellation.length - 1].y) < 200 &&
+                        !constellation.includes(s)
+                    );
+                    if (nearbyStar) constellation.push(nearbyStar);
+                }
+                if (constellation.length > 1) constellations.push(constellation);
+            }
+            
+            function animateStars() {
+                ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+                
+                // Draw constellation lines
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.lineWidth = 1;
+                constellations.forEach(constellation => {
+                    ctx.beginPath();
+                    ctx.moveTo(constellation[0].x, constellation[0].y);
+                    for (let i = 1; i < constellation.length; i++) {
+                        ctx.lineTo(constellation[i].x, constellation[i].y);
+                    }
+                    ctx.stroke();
+                });
+                
+                // Draw stars with twinkling
+                stars.forEach(star => {
+                    star.twinkle += 0.02;
+                    const opacity = star.opacity * (0.7 + 0.3 * Math.sin(star.twinkle));
+                    
+                    ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add glow
+                    ctx.shadowBlur = 3;
+                    ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+                
+                requestAnimationFrame(animateStars);
+            }
+            animateStars();
+        }
+        
+        // Enhanced Fireworks for Countdown (after tree appears)
+        function initFireworks() {
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+            const ctx = fireworksCanvas.getContext('2d');
+            const fireworks = [];
+            let isActive = false;
+            
+            // Firework types with different designs
+            const fireworkTypes = {
+                burst: { particles: 50, spread: 360 },
+                ring: { particles: 30, spread: 360, ring: true },
+                willow: { particles: 40, spread: 180, gravity: 0.3 },
+                chrysanthemum: { particles: 60, spread: 360, layers: 3 },
+                palm: { particles: 45, spread: 120, gravity: 0.2 },
+                round: { particles: 35, spread: 360, size: 4 }
+            };
+            
+            const colors = ['#D4AF37', '#F4D03F', '#ff6b9d', '#ffffff', '#16423C', '#00ffff', '#ff00ff', '#ffff00', '#ff6b6b', '#4ecdc4'];
+            
+            function createFirework(x, y, type = 'burst', launchFromBottom = false) {
+                const config = fireworkTypes[type] || fireworkTypes.burst;
+                const fireworkColor = colors[Math.floor(Math.random() * colors.length)];
+                const secondaryColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                if (launchFromBottom) {
+                    // Launch from bottom and explode at target
+                    const launchY = fireworksCanvas.height;
+                    const targetY = y;
+                    const steps = 30;
+                    const stepY = (targetY - launchY) / steps;
+                    
+                    let currentY = launchY;
+                    let step = 0;
+                    
+                    const launchInterval = setInterval(() => {
+                        if (step < steps) {
+                            currentY += stepY;
+                            step++;
+                        } else {
+                            clearInterval(launchInterval);
+                            explodeFirework(x, targetY, config, fireworkColor, secondaryColor);
+                        }
+                    }, 16);
+                } else {
+                    // Explode directly (from middle or random)
+                    explodeFirework(x, y, config, fireworkColor, secondaryColor);
+                }
+            }
+            
+            function explodeFirework(x, y, config, color1, color2) {
+                for (let i = 0; i < config.particles; i++) {
+                    const angle = (config.spread * i) / config.particles;
+                    const speed = Math.random() * 8 + 3;
+                    const vx = Math.cos(angle * Math.PI / 180) * speed;
+                    const vy = Math.sin(angle * Math.PI / 180) * speed;
+                    
+                    fireworks.push({
+                        x: x,
+                        y: y,
+                        vx: vx,
+                        vy: vy,
+                        color: Math.random() > 0.5 ? color1 : color2,
+                        life: 1,
+                        decay: Math.random() * 0.02 + 0.01,
+                        size: config.size || (Math.random() * 4 + 2),
+                        gravity: config.gravity || 0.1,
+                        trail: []
+                    });
+                }
+                
+                // Add ring effect if specified
+                if (config.ring) {
+                    for (let i = 0; i < 20; i++) {
+                        const angle = (360 * i) / 20;
+                        const speed = 2;
+                        fireworks.push({
+                            x: x,
+                            y: y,
+                            vx: Math.cos(angle * Math.PI / 180) * speed,
+                            vy: Math.sin(angle * Math.PI / 180) * speed,
+                            color: color1,
+                            life: 1,
+                            decay: 0.005,
+                            size: 3,
+                            gravity: 0,
+                            trail: []
+                        });
+                    }
+                }
+            }
+            
+            function animate() {
+                if (isActive) {
+                    ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
+                    ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+                    
+                    for (let i = fireworks.length - 1; i >= 0; i--) {
+                        const f = fireworks[i];
+                        f.vy += f.gravity;
+                        f.x += f.vx;
+                        f.y += f.vy;
+                        f.life -= f.decay;
+                        
+                        // Store trail for willow effect
+                        f.trail.push({ x: f.x, y: f.y, life: f.life });
+                        if (f.trail.length > 5) f.trail.shift();
+                        
+                        // Draw trail
+                        f.trail.forEach((point, idx) => {
+                            ctx.globalAlpha = point.life * (idx / f.trail.length) * 0.5;
+                            ctx.fillStyle = f.color;
+                            ctx.beginPath();
+                            ctx.arc(point.x, point.y, f.size * 0.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        });
+                        
+                        // Draw particle
+                        ctx.globalAlpha = f.life;
+                        ctx.fillStyle = f.color;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = f.color;
+                        ctx.beginPath();
+                        ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        
+                        if (f.life <= 0) {
+                            fireworks.splice(i, 1);
+                        }
+                    }
+                }
+                
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animate);
+            }
+            animate();
+            
+            // Enhanced fireworks with different types and launch patterns
+            function startFireworks() {
+                isActive = true;
+                const types = Object.keys(fireworkTypes);
+                
+                const burstInterval = setInterval(() => {
+                    if (fireworks.length < 300) {
+                        // Random firework type
+                        const type = types[Math.floor(Math.random() * types.length)];
+                        
+                        // Edge to edge coverage - some from bottom, some from middle/random
+                        if (Math.random() > 0.5) {
+                            // Launch from bottom (50% chance)
+                            createFirework(
+                                Math.random() * fireworksCanvas.width,
+                                Math.random() * fireworksCanvas.height * 0.6 + fireworksCanvas.height * 0.2,
+                                type,
+                                true
+                            );
+                        } else {
+                            // Explode from middle/random position (50% chance)
+                            createFirework(
+                                Math.random() * fireworksCanvas.width,
+                                Math.random() * fireworksCanvas.height * 0.7 + fireworksCanvas.height * 0.15,
+                                type,
+                                false
+                            );
+                        }
+                    }
+                }, 400);
+                
+                // Stop after 7 seconds (3s start + 5s after tree stops at 5s = ends at 10s)
+                setTimeout(() => {
+                    clearInterval(burstInterval);
+                    setTimeout(() => {
+                        isActive = false;
+                        fireworks.length = 0;
+                    }, 2000);
+                }, 7000);
+            }
+            
+            return startFireworks;
+        }
+        
+        function startCountdown() {
+            // Start playing music immediately
+            music.play().catch(e => {
+                console.log('Music autoplay prevented, will play after user interaction');
+            });
+            
+            // Initialize night sky
+            initNightSky();
+            const startFireworks = initFireworks();
+            
+            const countdownInterval = setInterval(() => {
+                countdownValue--;
+                if (countdownValue > 0) {
+                    countdownNumberEl.textContent = countdownValue;
+                    countdownNumberEl.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNumberEl.style.animation = 'countdownPulse 1s ease';
+                    }, 10);
+                } else {
+                    // Hide countdown number
+                    countdownNumberEl.style.display = 'none';
+                    
+                    // Show Christmas tree and start growing (5 seconds)
+                    christmasTreeEl.classList.remove('hidden');
+                    
+                    // Start fireworks at 3 seconds (during tree growth)
+                    setTimeout(() => {
+                        startFireworks();
+                    }, 3000);
+                    
+                    // Transition to landing page after tree finishes (5s) + fireworks duration (5s) = 10s total
+                    setTimeout(() => {
+                        countdownEl.classList.add('hidden');
+                        const entryPage = document.getElementById('entryPage');
+                        entryPage.classList.remove('hidden');
+                        createNorthPoleBackground();
+                        createLandingSnowflakes();
+                        // Try to play music again after countdown
+                        music.play().catch(e => console.log('Music play prevented'));
+                    }, 10000); // 5s tree growth + 5s fireworks after tree stops = 10s total
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+        }
+        
+        // Start countdown on page load
+        startCountdown();
+
+        // Create North Pole Background
+        function createNorthPoleBackground() {
+            const container = document.getElementById('northPoleBackground');
+            container.innerHTML = '<div class="north-pole-silhouette"></div>';
+        }
+        
+        // Entry Page Snowflakes - Full Top to Bottom Snowfall
+        function createLandingSnowflakes() {
+            const container = document.getElementById('snowflakesLanding');
+            container.innerHTML = '';
+            const snowflakeTypes = ['❄', '❅', '❆', '❄', '❅', '❆', '❄', '❅', '❆'];
+            
+            for (let i = 0; i < 150; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'landing-snowflake';
+                snowflake.textContent = snowflakeTypes[Math.floor(Math.random() * snowflakeTypes.length)];
+                
+                // Different sizes - small, medium, large, extra large
+                const sizeType = Math.random();
+                let fontSize, speed, opacity, rotationSpeed;
+                if (sizeType < 0.4) {
+                    // Small snowflakes (40% of snowflakes)
+                    fontSize = Math.random() * 10 + 10; // 10-20px
+                    speed = Math.random() * 4 + 8; // 8-12s (slowest)
+                    opacity = Math.random() * 0.4 + 0.3; // 0.3-0.7
+                    rotationSpeed = Math.random() * 180 + 180; // 180-360deg
+                } else if (sizeType < 0.75) {
+                    // Medium snowflakes (35% of snowflakes)
+                    fontSize = Math.random() * 15 + 20; // 20-35px
+                    speed = Math.random() * 3 + 5; // 5-8s (medium)
+                    opacity = Math.random() * 0.5 + 0.4; // 0.4-0.9
+                    rotationSpeed = Math.random() * 360 + 360; // 360-720deg
+                } else if (sizeType < 0.95) {
+                    // Large snowflakes (20% of snowflakes)
+                    fontSize = Math.random() * 20 + 35; // 35-55px
+                    speed = Math.random() * 2 + 3; // 3-5s (faster)
+                    opacity = Math.random() * 0.3 + 0.7; // 0.7-1.0
+                    rotationSpeed = Math.random() * 540 + 540; // 540-1080deg
+                } else {
+                    // Extra large snowflakes (5% of snowflakes)
+                    fontSize = Math.random() * 25 + 55; // 55-80px
+                    speed = Math.random() * 1.5 + 2; // 2-3.5s (fastest)
+                    opacity = Math.random() * 0.2 + 0.8; // 0.8-1.0
+                    rotationSpeed = Math.random() * 720 + 720; // 720-1440deg
+                }
+                
+                snowflake.style.position = 'absolute';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.top = '-20px'; // Start at top
+                snowflake.style.fontSize = fontSize + 'px';
+                snowflake.style.animationDuration = speed + 's';
+                snowflake.style.animationDelay = Math.random() * 3 + 's';
+                snowflake.style.opacity = opacity;
+                snowflake.style.color = 'white';
+                snowflake.style.textShadow = `0 0 ${fontSize * 0.3}px rgba(255, 255, 255, ${opacity * 0.8})`;
+                
+                // Add horizontal drift - varies by size
+                const driftAmount = (Math.random() - 0.5) * (fontSize * 0.8);
+                snowflake.style.setProperty('--drift', driftAmount + 'px');
+                snowflake.style.setProperty('--rotation', rotationSpeed + 'deg');
+                
+                container.appendChild(snowflake);
+            }
+        }
+        // Entry Button
+        document.getElementById('enterButton').addEventListener('click', () => {
+            document.getElementById('entryPage').style.display = 'none';
+            document.getElementById('mainHub').classList.remove('hidden');
+            initMainHub();
+        });
+
+        // Initialize Main Hub
+        function initMainHub() {
+            createPhotoTree();
+            initCounter();
+            initGlitter();
+            initGiftOverlays();
+            initScrollReveal();
+        }
+        
+        // Scroll reveal for counter and gifts
+        function initScrollReveal() {
+            const photoTreeSection = document.getElementById('photoTreeSection');
+            const counterSection = document.getElementById('counterSection');
+            const giftsSection = document.getElementById('giftsSection');
+            
+            // Initially hide counter and gifts
+            counterSection.style.opacity = '0';
+            giftsSection.style.opacity = '0';
+            
+            function handleScroll() {
+                const photoTreeBottom = photoTreeSection.offsetTop + photoTreeSection.offsetHeight;
+                const scrollPosition = window.scrollY + window.innerHeight;
+                
+                // Show counter when scrolled past photo tree
+                if (scrollPosition > photoTreeBottom - 200) {
+                    counterSection.style.opacity = '1';
+                }
+                
+                // Show gifts when scrolled further
+                const counterBottom = counterSection.offsetTop + counterSection.offsetHeight;
+                if (scrollPosition > counterBottom - 200) {
+                    giftsSection.style.opacity = '1';
+                }
+            }
+            
+            window.addEventListener('scroll', handleScroll);
+            // Check on initial load
+            handleScroll();
+        }
+
+        // Photo Tree
+        function createPhotoTree() {
+            const tree = document.getElementById('photoTree');
+            
+            // Clear only the photo rows, preserve containers
+            const existingRows = tree.querySelectorAll('div[data-photo-row]');
+            existingRows.forEach(row => row.remove());
+            
+            // Ensure containers exist
+            let triangleContainer = document.getElementById('treeTriangle');
+            let lightsContainer = document.getElementById('fairyLightsContainer');
+            
+            if (!triangleContainer) {
+                triangleContainer = document.createElement('div');
+                triangleContainer.id = 'treeTriangle';
+                triangleContainer.className = 'absolute pointer-events-none';
+                triangleContainer.style.cssText = 'top: 0; left: 0; right: 0; bottom: 0; z-index: 1;';
+                tree.appendChild(triangleContainer);
+            }
+            
+            if (!lightsContainer) {
+                lightsContainer = document.createElement('div');
+                lightsContainer.id = 'fairyLightsContainer';
+                lightsContainer.className = 'absolute pointer-events-none';
+                lightsContainer.style.cssText = 'top: 0; left: 0; right: 0; bottom: 0; z-index: 15;';
+                tree.appendChild(lightsContainer);
+            }
+            // Create a tiered triangle: 1, 2, 3, 4, 5 photos
+            // Photo naming: tree/tree{row}{position}.png (e.g., tree/tree1-1.png, tree/tree2-1.png)
+            const photoMap = [
+                // Row 1 (top, 1 photo)
+                ['tree/tree1-1.png'],
+                // Row 2 (2 photos)
+                ['tree/tree2-1.png', 'tree/tree2-2.png'],
+                // Row 3 (3 photos)
+                ['tree/tree3-1.png', 'tree/tree3-2.png', 'tree/tree3-3.png'],
+                // Row 4 (4 photos)
+                ['tree/tree4-1.png', 'tree/tree4-2.png', 'tree/tree4-3.png', 'tree/tree4-4.png'],
+                // Row 5 (bottom, 5 photos)
+                ['tree/tree5-1.png', 'tree/tree5-2.png', 'tree/tree5-3.png', 'tree/tree5-4.png', 'tree/tree5-5.png']
+            ];
+            
+            const isMobile = window.innerWidth <= 430;
+            
+            const photoPositions = []; // Store positions for fairy lights
+            
+            photoMap.forEach((photos, rowIndex) => {
+                const row = document.createElement('div');
+                row.setAttribute('data-photo-row', 'true');
+                // Minimal spacing between rows - tighter on mobile
+                row.className = isMobile ? 'flex justify-center gap-1.5 mb-1' : 'flex justify-center gap-2 md:gap-3 mb-2 md:mb-3';
+                row.style.position = 'relative';
+                row.style.zIndex = '10';
+                
+                photos.forEach((photoName, photoIndex) => {
+                    const imgContainer = document.createElement('div');
+                    // All photos same size - sized to fit iPhone screen from top to bottom
+                    const size = isMobile ? 'w-20 h-20' : 'w-40 h-40';
+                    imgContainer.className = `${size} rounded-xl border-3 border-[#D4AF37] shadow-2xl hover:scale-110 transition-all duration-300 relative overflow-hidden`;
+                    imgContainer.style.boxShadow = '0 8px 20px rgba(22, 66, 60, 0.4), 0 0 0 2px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
+                    imgContainer.style.animationDelay = `${(rowIndex * 0.1) + (photoIndex * 0.05)}s`;
+                    imgContainer.style.animation = 'float 4s ease-in-out infinite';
+                    imgContainer.style.zIndex = '10';
+                    imgContainer.style.backgroundColor = '#16423C'; // Green background for when photo moves
+                    
+                    const img = document.createElement('img');
+                    img.src = photoName;
+                    img.alt = `Photo ${rowIndex + 1}-${photoIndex + 1}`;
+                    img.className = 'w-full h-full object-cover';
+                    img.onerror = function() {
+                        // Fallback if image doesn't exist
+                        this.style.display = 'none';
+                        imgContainer.className += ' bg-gradient-to-br from-[#16423C] via-[#1a5549] to-[#0a2e28] flex items-center justify-center';
+                        imgContainer.innerHTML = '<span class="text-white text-xl md:text-3xl">📷</span><div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent"></div>';
+                    };
+                    
+                    imgContainer.appendChild(img);
+                    row.appendChild(imgContainer);
+                    
+                    // Store position for fairy lights
+                    photoPositions.push({
+                        row: rowIndex,
+                        index: photoIndex,
+                        totalInRow: photos.length,
+                        element: imgContainer
+                    });
+                });
+                
+                tree.appendChild(row);
+            });
+            
+            // Create tree trunk
+            createTreeTrunk(isMobile);
+            
+            // Create green triangle and fairy lights after tree is fully rendered
+            setTimeout(() => {
+                createTreeTriangle(isMobile);
+                createFairyLights(photoPositions, isMobile);
+            }, 800);
+        }
+        
+        // Create Green Triangle Background
+        function createTreeTriangle(isMobile) {
+            const triangle = document.getElementById('treeTriangle');
+            if (!triangle) {
+                console.error('Triangle container not found');
+                return;
+            }
+            
+            triangle.innerHTML = '';
+            
+            const tree = document.getElementById('photoTree');
+            if (!tree) {
+                console.error('Photo tree not found');
+                return;
+            }
+            
+            // Force a reflow to get accurate dimensions
+            void tree.offsetHeight;
+            
+            // Get tree dimensions
+            const treeHeight = tree.scrollHeight || tree.offsetHeight;
+            const treeWidth = tree.scrollWidth || tree.offsetWidth;
+            
+            if (treeHeight === 0 || treeWidth === 0) {
+                console.log('Tree dimensions are zero, retrying...', { treeHeight, treeWidth });
+                setTimeout(() => createTreeTriangle(isMobile), 300);
+                return;
+            }
+            
+            const triangleElement = document.createElement('div');
+            
+            // Calculate triangle size - wider base, tall enough to cover tree
+            const baseWidth = isMobile ? Math.max(treeWidth * 1.4, 200) : Math.max(treeWidth * 1.3, 400);
+            const height = isMobile ? Math.max(treeHeight * 1.2, 350) : Math.max(treeHeight * 1.15, 500);
+            
+            triangleElement.style.cssText = `
+                width: 0;
+                height: 0;
+                border-left: ${baseWidth / 2}px solid transparent;
+                border-right: ${baseWidth / 2}px solid transparent;
+                border-bottom: ${height}px solid #16423C;
+                position: absolute;
+                left: 50%;
+                top: 0;
+                transform: translateX(-50%);
+                opacity: 0.75;
+                z-index: 1;
+                pointer-events: none;
+            `;
+            
+            triangle.appendChild(triangleElement);
+            console.log('Triangle created:', { baseWidth, height, treeWidth, treeHeight, treeRect: tree.getBoundingClientRect() });
+        }
+        
+        // Create Tree Trunk
+        function createTreeTrunk(isMobile) {
+            const trunk = document.getElementById('treeTrunk');
+            trunk.innerHTML = '';
+            
+            const trunkHeight = isMobile ? 'h-12' : 'h-20';
+            const trunkWidth = isMobile ? 'w-8' : 'w-16';
+            
+            const trunkElement = document.createElement('div');
+            trunkElement.className = `${trunkWidth} ${trunkHeight} bg-gradient-to-b from-[#8B4513] via-[#654321] to-[#5C3317] rounded-b-lg mx-auto shadow-2xl`;
+            trunkElement.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+            
+            trunk.appendChild(trunkElement);
+        }
+        
+        // Create RGB Fairy Lights
+        function createFairyLights(photoPositions, isMobile) {
+            const container = document.getElementById('fairyLightsContainer');
+            if (!container) {
+                console.log('Fairy lights container not found');
+                return;
+            }
+            
+            if (!photoPositions || photoPositions.length === 0) {
+                console.log('No photo positions available');
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#ff0088'];
+            const lightSize = isMobile ? 6 : 10;
+            const spacing = isMobile ? 12 : 18;
+            
+            // Wait for layout to be ready
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    let lightsCreated = 0;
+                    
+                    // Create lights wrapping around the tree structure
+                    photoPositions.forEach((pos, idx) => {
+                        if (!pos || !pos.element) {
+                            console.log('Missing element at index', idx);
+                            return;
+                        }
+                        
+                        // Get positions relative to container
+                        const photoRect = pos.element.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        
+                        if (photoRect.width === 0 || photoRect.height === 0) {
+                            console.log('Photo rect is zero at index', idx);
+                            return;
+                        }
+                        
+                        const relativeX = photoRect.left - containerRect.left + photoRect.width / 2;
+                        const relativeY = photoRect.top - containerRect.top + photoRect.height / 2;
+                        
+                        // Create lights in a pattern around photos
+                        const lightPatterns = [
+                            { x: -spacing, y: -spacing },
+                            { x: spacing, y: -spacing },
+                            { x: -spacing, y: spacing },
+                            { x: spacing, y: spacing },
+                            { x: 0, y: -spacing * 1.5 },
+                            { x: 0, y: spacing * 1.5 }
+                        ];
+                        
+                        lightPatterns.forEach((pattern, patternIdx) => {
+                            const light = document.createElement('div');
+                            const color = colors[(idx * 2 + patternIdx) % colors.length];
+                            light.className = 'fairy-light';
+                            light.style.position = 'absolute';
+                            light.style.width = `${lightSize}px`;
+                            light.style.height = `${lightSize}px`;
+                            light.style.borderRadius = '50%';
+                            light.style.backgroundColor = color;
+                            light.style.boxShadow = `0 0 ${lightSize * 2}px ${color}, 0 0 ${lightSize * 4}px ${color}`;
+                            light.style.left = `${relativeX + pattern.x}px`;
+                            light.style.top = `${relativeY + pattern.y}px`;
+                            light.style.transform = 'translate(-50%, -50%)';
+                            light.style.animation = `fairyLightTwinkle ${1 + Math.random() * 2}s ease-in-out infinite`;
+                            light.style.animationDelay = `${Math.random() * 2}s`;
+                            light.style.zIndex = '15';
+                            light.style.pointerEvents = 'none';
+                            
+                            container.appendChild(light);
+                            lightsCreated++;
+                        });
+                    });
+                    
+                    console.log(`Created ${lightsCreated} fairy lights`);
+                    
+                    // Add connecting lines between lights (fairy light wire effect)
+                    for (let i = 0; i < photoPositions.length - 1; i++) {
+                        const current = photoPositions[i];
+                        const next = photoPositions[i + 1];
+                        
+                        if (!current || !next || !current.element || !next.element) continue;
+                        
+                        // Connect adjacent photos in same row or adjacent rows
+                        if (current.row === next.row || Math.abs(current.row - next.row) === 1) {
+                            const currentRect = current.element.getBoundingClientRect();
+                            const nextRect = next.element.getBoundingClientRect();
+                            const containerRect = container.getBoundingClientRect();
+                            
+                            const x1 = currentRect.left - containerRect.left + currentRect.width / 2;
+                            const y1 = currentRect.top - containerRect.top + currentRect.height / 2;
+                            const x2 = nextRect.left - containerRect.left + nextRect.width / 2;
+                            const y2 = nextRect.top - containerRect.top + nextRect.height / 2;
+                            
+                            const line = document.createElement('div');
+                            line.className = 'fairy-light-wire';
+                            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                            
+                            line.style.position = 'absolute';
+                            line.style.left = `${x1}px`;
+                            line.style.top = `${y1}px`;
+                            line.style.width = `${length}px`;
+                            line.style.height = '2px';
+                            line.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)';
+                            line.style.transform = `rotate(${angle}deg)`;
+                            line.style.transformOrigin = '0 0';
+                            line.style.zIndex = '14';
+                            line.style.pointerEvents = 'none';
+                            
+                            container.appendChild(line);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Counter
+        function initCounter() {
+            // December 8, 2023, 4:48 PM Melbourne time (AEDT = UTC+11)
+            const startDate = new Date('2023-12-08T05:48:00Z'); // UTC equivalent of 4:48 PM AEDT
+            
+            function updateCounter() {
+                const now = new Date();
+                const diff = now - startDate;
+                
+                if (diff < 0) {
+                    // If somehow before start date
+                    return;
+                }
+                
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24 * 30.44));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30.44)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('years').textContent = years;
+                document.getElementById('months').textContent = months;
+                document.getElementById('days').textContent = days;
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            }
+            
+            updateCounter();
+            setInterval(updateCounter, 1000);
+        }
+
+        // Glitter Effect
+        function initGlitter() {
+            const canvas = document.getElementById('glitterCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = 500;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            const particles = [];
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 4 + 2,
+                    speed: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    // Twinkling effect
+                    particle.twinkle += 0.1;
+                    const opacity = particle.opacity * (0.5 + 0.5 * Math.sin(particle.twinkle));
+                    
+                    // Create gradient for sparkle
+                    const gradient = ctx.createRadialGradient(
+                        particle.x, particle.y, 0,
+                        particle.x, particle.y, particle.size
+                    );
+                    gradient.addColorStop(0, `rgba(212, 175, 55, ${opacity})`);
+                    gradient.addColorStop(0.5, `rgba(212, 175, 55, ${opacity * 0.5})`);
+                    gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add star shape
+                    ctx.strokeStyle = `rgba(212, 175, 55, ${opacity * 0.6})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (i * 4 * Math.PI / 5) - Math.PI / 2;
+                        const x = particle.x + Math.cos(angle) * particle.size;
+                        const y = particle.y + Math.sin(angle) * particle.size;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                    
+                    particle.y += particle.speed;
+                    if (particle.y > canvas.height) {
+                        particle.y = 0;
+                        particle.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Music Toggle
+        let musicPlaying = true; // Music starts playing during countdown
+        
+        document.getElementById('musicToggle').addEventListener('click', () => {
+            if (musicPlaying) {
+                music.pause();
+                musicPlaying = false;
+            } else {
+                music.play().catch(e => console.log('Music play prevented'));
+                musicPlaying = true;
+            }
+        });
+
+        // Gift Overlays
+        function initGiftOverlays() {
+            document.querySelectorAll('.gift-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const giftNum = card.dataset.gift;
+                    const overlay = document.getElementById(`overlay${giftNum}`);
+                    overlay.classList.add('active');
+                    
+                    // Initialize overlay-specific effects
+                    if (giftNum === '1') initRosePetalsAndNotes();
+                    if (giftNum === '2') initRecordPlayer();
+                    if (giftNum === '3') initSnow();
+                    if (giftNum === '4') initGoldenConfetti();
+                });
+            });
+            
+            // Close overlays - improved close button handling
+            document.querySelectorAll('.close-button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const overlay = btn.closest('.overlay');
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        // Stop music if Gift 2 overlay is closing
+                        if (overlay.id === 'overlay2') {
+                            const player = document.getElementById('recordPlayer');
+                            player.classList.remove('record-player');
+                        }
+                    }
+                });
+            });
+            
+            // Close on overlay background click
+            document.querySelectorAll('.overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Rose Petals and Love Notes Overlay (Gift 1)
+        function initRosePetalsAndNotes() {
+            // Rose petals falling
+            const petalsContainer = document.getElementById('rosePetalsOverlay');
+            petalsContainer.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'rose-petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDelay = Math.random() * 8 + 's';
+                petal.style.animationDuration = (6 + Math.random() * 4) + 's';
+                petalsContainer.appendChild(petal);
+            }
+            
+            // Love notes floating
+            const notesContainer = document.getElementById('loveNotesOverlay');
+            notesContainer.innerHTML = '';
+            const notes = ['💌', '💕', '💖', '💗', '💝'];
+            for (let i = 0; i < 12; i++) {
+                const note = document.createElement('div');
+                note.className = 'love-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = Math.random() * 100 + '%';
+                note.style.top = Math.random() * 100 + '%';
+                note.style.animationDelay = Math.random() * 6 + 's';
+                note.style.animationDuration = (4 + Math.random() * 4) + 's';
+                notesContainer.appendChild(note);
+            }
+            
+            // Check if image exists and show it
+            const img = document.getElementById('letterImage');
+            img.onerror = () => {
+                img.style.display = 'none';
+            };
+            img.onload = () => {
+                img.style.display = 'block';
+            };
+            img.src = img.src; // Trigger load check
+        }
+
+        // Record Player
+        function initRecordPlayer() {
+            const songs = [
+                'All I Want for Christmas Is You',
+                'Perfect - Ed Sheeran',
+                'Last Christmas',
+                'Santa Tell Me',
+                'Underneath the Tree',
+                'Mistletoe'
+            ];
+            
+            const songList = document.getElementById('songList');
+            songList.innerHTML = '';
+            let selectedSong = null;
+            
+            songs.forEach((song, index) => {
+                const songItem = document.createElement('div');
+                songItem.className = 'glassmorphism rounded-xl p-5 md:p-6 cursor-pointer hover:bg-gradient-to-r hover:from-[#D4AF37]/30 hover:to-[#F4D03F]/30 transition-all font-medium text-lg md:text-xl shadow-lg hover:shadow-xl hover:scale-105';
+                songItem.textContent = song;
+                songItem.addEventListener('click', () => {
+                    if (selectedSong) {
+                        selectedSong.classList.remove('bg-gradient-to-r', 'from-[#D4AF37]', 'to-[#F4D03F]', 'text-white', 'shadow-2xl');
+                        selectedSong.classList.add('glassmorphism');
+                    }
+                    songItem.classList.remove('glassmorphism');
+                    songItem.classList.add('bg-gradient-to-r', 'from-[#D4AF37]', 'to-[#F4D03F]', 'text-white', 'shadow-2xl');
+                    selectedSong = songItem;
+                    
+                    const player = document.getElementById('recordPlayer');
+                    player.classList.add('record-player');
+                });
+                songList.appendChild(songItem);
+            });
+            
+            // Add candy canes
+            const container = document.getElementById('candyCanes');
+            container.innerHTML = '';
+            for (let i = 0; i < 8; i++) {
+                const cane = document.createElement('div');
+                cane.className = 'candy-cane';
+                cane.textContent = '🎄';
+                cane.style.left = Math.random() * 100 + '%';
+                cane.style.top = Math.random() * 100 + '%';
+                cane.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(cane);
+            }
+        }
+
+        // Snow Effect
+        function initSnow() {
+            const container = document.getElementById('snowContainer');
+            container.innerHTML = '';
+            const snowflakes = ['❄', '❅', '❆'];
+            
+            for (let i = 0; i < 30; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (3 + Math.random() * 4) + 's';
+                snowflake.style.animationDelay = Math.random() * 2 + 's';
+                snowflake.style.opacity = Math.random();
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Golden Confetti and Stars Effect (Gift 4)
+        function initGoldenConfetti() {
+            // Golden confetti falling
+            const confettiContainer = document.getElementById('goldenConfettiContainer');
+            confettiContainer.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'golden-confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 4 + 's';
+                confetti.style.animationDuration = (3 + Math.random() * 2) + 's';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+                confettiContainer.appendChild(confetti);
+            }
+            
+            // Golden stars bursting
+            const starsContainer = document.getElementById('goldenStarsContainer');
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 15; i++) {
+                const star = document.createElement('div');
+                star.className = 'golden-star';
+                star.textContent = '⭐';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Coupon Flip
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // Initialize
+        // Snowflakes will be created when landing page appears
+    </script>
+</body>
+</html>
